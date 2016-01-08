@@ -1,7 +1,7 @@
 {
   "name": "unicorn-tool",
   "preferGlobal": "true",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Build library for YUI",
   "main": "index.js",
   "author": "Jonathan Rubstein",
