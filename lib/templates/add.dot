@@ -1,0 +1,14 @@
+YUI.add('{{=it.name}}', function(Y/** , NAME*/) {
+  {{=it.body || ''}}
+}, '{{=it.version}}', {
+  {{? it.optional}}
+  'optional' : {{= it.optional}},
+  {{?}}
+  {{? it.skinnable}}
+  'skinnable' : {{= it.skinnable}},
+  {{?}}
+  {{? it.dependencies}}
+  'requires': {{=it.dependencies}}{{?}}{{? it.lang}},
+  'lang': {{= it.lang}}
+  {{?}}
+});

@@ -1,0 +1,4 @@
+{{= it.body}}
+
+/* YUI CSS Detection Stamp */
+#yui3-css-stamp.{{= it.name}} { display: none; }

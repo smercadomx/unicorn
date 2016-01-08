@@ -1,0 +1,7 @@
+YUI.add('lang/{{= it.name}}{{? it.lang}}_{{= it.lang}}{{?}}', function(Y) {
+Y.Intl.add(
+'{{= it.name}}',
+'{{= it.lang || ''}}',
+{{= it.body}}
+);
+}, '{{= it.version}}');

@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+/*
+Copyright (c) 2015, Wells fargo. All rights reserved.
+Code licensed under the BSD License.
+*/
+
+require('../index')
