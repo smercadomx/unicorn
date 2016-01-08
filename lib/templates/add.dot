@@ -4,6 +4,9 @@ YUI.add('{{=it.name}}', function(Y/** , NAME*/) {
   {{? it.optional}}
   'optional' : {{= it.optional}},
   {{?}}
+  {{? it.config}}
+  {{= it.config}},
+  {{?}}
   {{? it.skinnable}}
   'skinnable' : {{= it.skinnable}},
   {{?}}
