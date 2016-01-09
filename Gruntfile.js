@@ -12,8 +12,6 @@ module.exports = function(grunt) {
   grunt.initConfig({
     release: {
       options: {
-        npm: false,
-        npmtag: false,
         tagMessage: 'Version <%= version %>'
       }
     }
