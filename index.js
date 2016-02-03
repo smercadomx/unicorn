@@ -2,7 +2,9 @@ var cli = require('./lib/cli'),
     path = require('path'),
     program = require('commander'),
     fs = require('fs'),
-    packageJSON = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json')));
+    _ = require('lodash'),
+    packageJSON = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'))),
+    options;
 
 function checkCWD(cwd) {
   if (cwd && path.isAbsolute(cwd)) {
@@ -26,4 +28,13 @@ program.version(packageJSON.version)
   .option('--cwd <path>', 'Sets the base path for the build', checkCWD)
   .parse(process.argv);
 
-cli.compile(program);
+cli.compile({
+  watch: program.watch,
+  gallop: program.gallop,
+  whisper: program.whisper,
+  roar: program.roar,
+  sprint: program.sprint,
+  jumpjs: program.jumpjs,
+  jumpcss: program.jumpcss,
+  cwd: program.cwd
+});
