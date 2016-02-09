@@ -31,7 +31,14 @@
     "winston": "^2.1.1"
   },
   "devDependencies": {
-    "dot": "^1.0.3"
+    "chai": "^3.5.0",
+    "dot": "^1.0.3",
+    "grunt-blanket": "0.0.9",
+    "grunt-contrib-clean": "^0.7.0",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-mocha-test": "^0.12.7",
+    "mocha": "^2.4.5",
+    "travis-cov": "^0.2.5"
   },
   "bin": {
     "unicorn": "./bin/unicorn"

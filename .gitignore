@@ -1,3 +1,5 @@
 node_modules/
 lib/templates.js
 .DS_Store
+coverage/
+aux/
