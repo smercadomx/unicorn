@@ -85,7 +85,6 @@ describe('Writer', function() {
         },
         result;
 
-
         // create the default lang file.
         mkdirp.sync(path.dirname(target));
         fs.writeFileSync(target + '.js', JSON.stringify({
@@ -94,7 +93,8 @@ describe('Writer', function() {
 
         writer.lang([], path.dirname(target), target, 'test', data);
         result = fs.readFileSync(target + '.js', 'utf-8');
-        assert.equal(result, 'YUI.add("lang/test",function(t){t.Intl.add("test","",{value:"key"})},"1.0.0");');
+        assert.isTrue(result.indexOf('"lang/test"') > 0);
+        assert.isTrue(result.indexOf('"test","",{value:"key"}') > 0);
     });
   });
 });

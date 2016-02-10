@@ -1,0 +1,28 @@
+{
+  "test": {
+    "requires": [
+      "test-submodule"
+    ],
+    "plugins": {
+      "plugin": {
+        "requires": [
+          "something"
+        ]
+      }
+    },
+    "submodules": {
+      "test-submodule": {
+        "requires": [
+          "dependency"
+        ],
+        "plugins": {
+          "sub-plugin": {
+            "requires": [
+              "something else"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
