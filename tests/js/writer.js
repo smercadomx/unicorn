@@ -1,16 +1,17 @@
-var assert = require('assert'),
-  writer = require('../lib/writer'),
+var assert = require('chai').assert,
+  writer = require('../../lib/writer'),
   rimraf = require('rimraf'),
   path = require('path'),
+  mkdirp = require('mkdirp'),
   fs = require('fs'),
   target = path.join('aux', 'test');
 
 describe('Writer', function() {
   beforeEach(function() {
-    rimraf.sync(target);
+    rimraf.sync(path.dirname(target));
   });
   afterEach(function() {
-    rimraf.sync(target);
+    rimraf.sync(path.dirname(target));
   });
 
   describe('js', function () {
@@ -57,7 +58,43 @@ describe('Writer', function() {
   });
 
   describe('lang', function () {
-    it('generation', function () {});
-    it('generation-default-lang', function () {});
+    it('generation', function () {
+      var langs = ['en', 'es', 'fr'],
+        data = {
+          version: '1.0.0',
+          name: 'test'
+        },
+        result;
+
+      writer.lang(langs, path.join('tests', 'module', 'lang'), target, 'test', data);
+      result = fs.readFileSync(target + '_en.js', 'utf-8');
+      assert.isTrue(result.indexOf('"en"') > 0);
+      assert.isTrue(result.indexOf('"es"') < 0);
+      result = fs.readFileSync(target + '_es.js', 'utf-8');
+      assert.isTrue(result.indexOf('"es"') > 0);
+      assert.isTrue(result.indexOf('"en"') < 0);
+      result = fs.readFileSync(target + '_fr.js', 'utf-8');
+      assert.isTrue(result.indexOf('"fr"') > 0);
+      assert.isTrue(result.indexOf('"es"') < 0);
+    });
+
+    it('generation-default-lang', function () {
+      var data = {
+          version: '1.0.0',
+          name: 'test'
+        },
+        result;
+
+
+        // create the default lang file.
+        mkdirp.sync(path.dirname(target));
+        fs.writeFileSync(target + '.js', JSON.stringify({
+          value: 'key'
+        }), 'utf8');
+
+        writer.lang([], path.dirname(target), target, 'test', data);
+        result = fs.readFileSync(target + '.js', 'utf-8');
+        assert.equal(result, 'YUI.add("lang/test",function(t){t.Intl.add("test","",{value:"key"})},"1.0.0");');
+    });
   });
 });

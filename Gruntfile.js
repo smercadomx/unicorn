@@ -37,7 +37,7 @@ module.exports = function(grunt) {
          options: {
            reporter: 'Nyan',
          },
-         src: ['./coverage/tests/**/*.js']
+         src: ['./coverage/tests/js/**/*.js']
        },
        coverage: {
          options: {
@@ -45,13 +45,13 @@ module.exports = function(grunt) {
            quiet: true,
            captureFile: './coverage/coverage.html'
          },
-         src: ['./coverage/tests/**/*.js']
+         src: ['./coverage/tests/js/**/*.js']
        },
        'travis-cov': {
          options: {
            reporter: 'travis-cov'
          },
-         src: ['./coverage/tests/**/*.js']
+         src: ['./coverage/tests/js/**/*.js']
        }
      }
   });
