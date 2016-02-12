@@ -1,0 +1,42 @@
+{
+  "name": "test",
+  "exec": ["scripts/script.js"],
+  "postexec": ["scripts/script.js"],
+  "prebuilds": ["dragon"],
+  "postbuilds": ["dragon"],
+  "builds": {
+    "test": {
+      "jsfiles": [
+        "js/test.js"
+      ],
+      "shifter": {
+        "jsstamp": false,
+        "usestamp": true
+      },
+      "exec": ["scripts/script.js"],
+      "postexec": ["scripts/script.js"]
+    },
+    "test-submodule": {
+      "jsfiles": [
+        "js/testSubmodule.js"
+      ]
+    },
+    "test-css": {
+      "cssfiles": [
+        "css/some.css"
+      ]
+    }
+  },
+  "shifter": {
+    "fail": false
+  },
+  "rollups": {
+    "test-pkg": {
+      "name": "test-pkg",
+      "files": [
+        "test",
+        "test-submodule"
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "dragon",
+  "exec": ["scripts/script.js"],
+  "postexec": ["scripts/script.js"],
+  "builds": {
+    "dragon": {
+      "jsfiles": [
+        "js/dragon.js"
+      ],
+      "shifter": {
+        "jsstamp": false,
+        "usestamp": true
+      },
+      "exec": ["scripts/script.js"],
+      "postexec": ["scripts/script.js"]
+    },
+    "dragon-submodule": {
+      "jsfiles": [
+        "js/dragonSubmodule.js"
+      ]
+    },
+    "dragon-css": {
+      "cssfiles": [
+        "css/some.css"
+      ]
+    }
+  },
+  "shifter": {
+    "fail": false
+  },
+  "rollups": {
+    "dragon-pkg": {
+      "name": "dragon-pkg",
+      "files": [
+        "dragon",
+        "dragon-submodule"
+      ]
+    }
+  }
+}

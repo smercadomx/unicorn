@@ -1,11 +1,12 @@
 {
-  "test": {
+  "dragon": {
     "requires": [
-      "test-submodule"
+      "dragon-submodule"
     ],
     "lang": [
       "en",
-      "es"
+      "es",
+      "fr"
     ],
     "skinnable": true,
     "plugins": {
@@ -16,10 +17,10 @@
       }
     },
     "submodules": {
-      "test-css": {
+      "dragon-css": {
         "type": "css"
       },
-      "test-submodule": {
+      "dragon-submodule": {
         "requires": [
           "dependency"
         ],
