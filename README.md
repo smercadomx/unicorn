@@ -1,5 +1,9 @@
 ### Unicorn
 
+![travis](https://travis-ci.org/jrubstein/unicorn.svg?branch=master)
+[![Dependency Status](https://david-dm.org/jrubstein/unicorn.svg)](https://david-dm.org/jrubstein/unicorn)
+[![devDependency Status](https://david-dm.org/jrubstein/unicorn/dev-status.svg)](https://david-dm.org/jrubstein/unicorn#info=devDependencies)
+
 Simple build platform for wria2 and sheath projects.
 
 ###### Features:
