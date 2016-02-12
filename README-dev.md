@@ -31,7 +31,7 @@ Usage
 A node module needs to have a bin file to be executed on the terminal. The package.json file has the following attribute:
 
     "bin": {
-      "unicorn": "./bin/unicorn"
+      "unicorn (./bin/unicorn"
     }
 
 This means that when executing ```unicorn``` on the terminal the script ```bin/unicorn``` will be executed.
@@ -116,6 +116,17 @@ If another type of report is needed a new module can be created taking into cons
 
 Finally change the reporters used by the builder.
 
+Testing
+---------------------
+
+The unit test are based on [Mochajs](https://mochajs.org/), [Chai](http://chaijs.com/) and [Sinon](http://sinonjs.org/).
+
+Running the test is as simple as ```grunt test```.
+
+
+All the unit test are located in ```tests/js``` folder. There are two modules that work as mock scenarios to test the tool (module and dragon). The mock foler contains separate files to test specific scenarios for the writer.
+
+
 APPENDIX A
 ---------------------
 
@@ -148,3 +159,11 @@ APPENDIX A
 ###### Dev Dependencies
 
 * dot (^1.0.3)
+* chai (^3.5.0)
+* grunt-blanket (0.0.9)
+* grunt-contrib-clean (^0.7.0)
+* grunt-contrib-copy (^0.8.2)
+* grunt-mocha-test (^0.12.7)
+* mocha (^2.4.5)
+* sinon (^1.17.3)
+* travis-cov (^0.2.5)

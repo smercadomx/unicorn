@@ -58,5 +58,6 @@ Contributing to the projects is simple. Follow these steps:
 * Run ```npm install .``` on the root level.
 * Run ```grunt``` on the root level.
 * Run ```npm link .``` to get global access to unicorn.
+* Run ```grunt test``` to run the unit tests.
 
 Once the changes are complete, create a pull request.
