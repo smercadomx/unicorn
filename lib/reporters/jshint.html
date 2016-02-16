@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/reporters/jshint</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="lib/reporters/jshint"><meta name="groc-project-path" content="lib/reporters/jshint.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">lib/reporters/jshint.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>),
+  chalk = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chalk'</span>),
+      logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">'winston'</span>);
+
+<span class="hljs-keyword">var</span> reporter = {
+  <span class="hljs-comment">/**! Show the jshint result to the user.
+   *
+   * For more information check http://jshint.com/docs/api/.
+   * @param data {object} the jshint results.
+   * @param name {string} The name of the module.
+   */</span>
+  report: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, name</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>errors: [
+  {
+    id: &#39;(error)&#39;,
+    raw: &#39;Read only.&#39;,
+    code: &#39;W020&#39;,
+    evidence: &#39;foo = 3;&#39;,
+    line: 2,
+    character: 1,
+    scope: &#39;(main)&#39;,
+    a: undefined,
+    b: undefined,
+    c: undefined,
+    d: undefined,
+    reason: &#39;Read only.&#39;
+  }
+]</code></pre></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">if</span> (data.errors &amp;&amp; data.errors.length &gt; <span class="hljs-number">0</span>) {
+      _.forEach(data.errors, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error</span>) </span>{
+        <span class="hljs-keyword">if</span> (error) {
+          logger.error(chalk.red(<span class="hljs-string">'JSHint - '</span> + name + <span class="hljs-string">': Error ('</span> + error.code + <span class="hljs-string">'): '</span> + error.reason + <span class="hljs-string">' @'</span> + error.line + <span class="hljs-string">':'</span> + error.character + <span class="hljs-string">' - Evidence: '</span> + error.evidence));
+        }
+      });
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>unused: [
+  {
+    name: &#39;goo&#39;,
+    line: 1, character: 10
+  }
+]</code></pre></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">if</span> (data.unused &amp;&amp; data.unused.length &gt; <span class="hljs-number">0</span>) {
+      _.forEach(data.unused, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">unused</span>) </span>{
+        logger.info(chalk.yellow(<span class="hljs-string">'JSHint - '</span> + name + <span class="hljs-string">': Unsused variable ['</span> + unused.name +<span class="hljs-string">'] @'</span> + unused.line + <span class="hljs-string">':'</span> + unused.character));
+      });
+    }
+  }
+};
+
+<span class="hljs-built_in">module</span>.exports = reporter;</div></div></div></div></body></html>

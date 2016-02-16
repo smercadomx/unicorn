@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/reporters/csslint</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="lib/reporters/csslint"><meta name="groc-project-path" content="lib/reporters/csslint.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">lib/reporters/csslint.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>),
+  chalk = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chalk'</span>),
+  logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">'winston'</span>),
+  state = {
+    error: chalk.red,
+    warning: chalk.cyan
+  };
+
+<span class="hljs-keyword">var</span> reporter = {
+  <span class="hljs-comment">/**! Show the csshint result to the user.
+   *
+   * For more information check https://github.com/CSSLint/csslint/wiki/Using-in-a-Node.js-Application.
+   * @param data {object} the csshint results.
+   * @param name {string} The name of the module.
+   */</span>
+  report: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, name</span>) </span>{
+    <span class="hljs-keyword">if</span> (data.messages &amp;&amp; data.messages.length &gt; <span class="hljs-number">0</span>) {
+      _.forEach(data.messages, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">message</span>) </span>{
+        <span class="hljs-keyword">var</span> type = message.type;
+        <span class="hljs-keyword">if</span> (message.line) {
+          logger.error(state[type](<span class="hljs-string">'CSSLint - '</span> + name + <span class="hljs-string">' : %s (line %d, col %d): %s'</span>), type, message.line, message.col, message.message);
+        } <span class="hljs-keyword">else</span> {
+          logger.error(state[type](<span class="hljs-string">'CSSLint - '</span> + name + <span class="hljs-string">' : %s - %s'</span>), type, message.message);
+        }
+      });
+    }
+  }
+};
+
+<span class="hljs-built_in">module</span>.exports = reporter;</div></div></div></div></body></html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/utils/executor</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="lib/utils/executor"><meta name="groc-project-path" content="lib/utils/executor.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">lib/utils/executor.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>),
+  LOG = <span class="hljs-built_in">require</span>(<span class="hljs-string">'winston'</span>),
+  path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>),
+  exec = <span class="hljs-built_in">require</span>(<span class="hljs-string">'sync-exec'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Returns the <code>nodejs</code> execute path depending on the platform.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getNode</span>(<span class="hljs-params"></span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the platform is windows double quotes must be added.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^win/</span>.test(process.platform)) {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'"'</span> + process.execPath + <span class="hljs-string">'"'</span>;
+  }
+  <span class="hljs-keyword">return</span> process.execPath;
+};
+
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-comment">/**! Execute the given scripts.
+   * @param scripts {array} The scripts to be executed.
+   * @param base {string} The base path for the scripts.
+   */</span>
+  execute: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">scripts, base</span>) </span>{
+    <span class="hljs-keyword">var</span> results = [];
+    _.forEach(scripts, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">script</span>) </span>{
+      <span class="hljs-keyword">var</span> command = script,
+        output;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The script is a nodejs file. Add nodejs to the command.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">if</span> (path.extname(script) === <span class="hljs-string">'.js'</span>) {
+        command = getNode() + <span class="hljs-string">' '</span> + path.normalize(script);
+      }
+      LOG.debug(<span class="hljs-string">'Executing: '</span> + command);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Execute the command.</p></div></div><div class="code"><div class="wrapper">      output = exec(command, {
+        cwd: base
+      });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>An error occured, notify the user.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">if</span> (output.stderr) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(output.stderr);
+      }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Show the user the output.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">if</span> (output.stdout) {
+        LOG.debug(output.stdout);
+      }
+      results.push(output);
+    });
+    <span class="hljs-keyword">return</span> results;
+  }
+};</div></div></div></div></body></html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/writer</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/writer"><meta name="groc-project-path" content="lib/writer.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">lib/writer.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<span class="hljs-keyword">var</span> uglify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'uglify-js'</span>),
+    uglifycss = <span class="hljs-built_in">require</span>(<span class="hljs-string">'uglifycss'</span>),
+    mkdirp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mkdirp'</span>),
+    jsBeautify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'js-beautify'</span>).js_beautify,
+    _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>),
+    fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>),
+    path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>),
+    jsonminify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jsonminify'</span>),
+    templates = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./templates.js'</span>),
+    uglifyConfig =  {
+      fromString: <span class="hljs-literal">true</span>,
+    	compress: {
+    		sequences: <span class="hljs-literal">true</span>,
+    		dead_code: <span class="hljs-literal">true</span>,
+    		conditionals: <span class="hljs-literal">true</span>,
+    		booleans: <span class="hljs-literal">true</span>,
+    		unused: <span class="hljs-literal">true</span>,
+    		if_return: <span class="hljs-literal">true</span>,
+    		join_vars: <span class="hljs-literal">true</span>,
+        drop_console: <span class="hljs-literal">true</span>,
+        drop_debugger: <span class="hljs-literal">true</span>
+    	}
+    },
+    uglifyCssConfig = {
+      uglyComments: <span class="hljs-literal">true</span>,
+      cuteComments: <span class="hljs-literal">false</span>,
+      expandVars: <span class="hljs-literal">false</span>
+    };
+
+<span class="hljs-comment">/**! Run uglifyjs.
+ * @param content {string} The content to compress.
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">compress</span>(<span class="hljs-params">content</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Uglify and minify the content.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">return</span> uglify.minify(content, uglifyConfig).code;
+};
+
+<span class="hljs-built_in">module</span>.exports = {
+ <span class="hljs-comment">/**! Write the necessary files to build a js file.
+  * @param data {string} The content for the js file.
+  * @param target {string} The output directory.
+  * @param regex {string} The regex to be applied to the raw and min version.
+  */</span>
+ js: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, target, regex</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run the js beautifier to the content</p></div></div><div class="code"><div class="wrapper">   <span class="hljs-keyword">var</span> content = jsBeautify(data);
+   mkdirp.sync(path.dirname(target));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>debug</code> version.</p></div></div><div class="code"><div class="wrapper">   fs.writeFileSync(target+ <span class="hljs-string">'-debug.js'</span>, content, <span class="hljs-string">'utf8'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Apply the <code>regex</code> to remove logging and debug lines.</p></div></div><div class="code"><div class="wrapper">   <span class="hljs-keyword">if</span> (regex) {
+     content = content.replace(regex, <span class="hljs-string">''</span>);
+   }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>raw</code> version.</p></div></div><div class="code"><div class="wrapper">   fs.writeFileSync(target + <span class="hljs-string">'.js'</span>, content, <span class="hljs-string">'utf8'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>min</code> version.</p></div></div><div class="code"><div class="wrapper">   fs.writeFileSync(target + <span class="hljs-string">'-min.js'</span>, compress(content), <span class="hljs-string">'utf8'</span>);
+ },
+
+ <span class="hljs-comment">/**! Write the necessary files to build a lang file.
+  * @param langs {array} The available languages.
+  * @param source {string} The source directory.
+  * @param target {string} The output directory.
+  * @param name {string} The name of the module.
+  * @param data {object} The data for the template.
+  */</span>
+ lang: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">langs, source, target, name, data</span>) </span>{
+   mkdirp.sync(path.dirname(target));
+   _.forEach(langs, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">lang</span>) </span>{
+     <span class="hljs-keyword">var</span> langPath = path.join(source, name + <span class="hljs-string">'_'</span> + lang + <span class="hljs-string">'.js'</span>),
+       i18n;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Read the language file while removing the comments.</p></div></div><div class="code"><div class="wrapper">     data.body = jsonminify(fs.readFileSync(langPath, <span class="hljs-string">'utf8'</span>));
+     data.lang = lang;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>min</code> version.</p></div></div><div class="code"><div class="wrapper">     fs.writeFileSync(target + <span class="hljs-string">'_'</span> + lang + <span class="hljs-string">'.js'</span>, compress(templates.lang(data)), <span class="hljs-string">'utf8'</span>);
+   });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Default value. This should be remove from wria2 and add a default language value.</p></div></div><div class="code"><div class="wrapper">   <span class="hljs-keyword">var</span> defaultLang = path.join(source, name + <span class="hljs-string">'.js'</span>);
+   <span class="hljs-keyword">if</span> (fs.existsSync(defaultLang)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Read the default language file while removing the comments.</p></div></div><div class="code"><div class="wrapper">     data.body = jsonminify(fs.readFileSync(defaultLang, <span class="hljs-string">'utf8'</span>));
+     data.lang = <span class="hljs-string">''</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>min</code> version.</p></div></div><div class="code"><div class="wrapper">     fs.writeFileSync(target + <span class="hljs-string">'.js'</span>, compress(templates.lang(data)), <span class="hljs-string">'utf8'</span>);
+   }
+ },
+
+ <span class="hljs-comment">/**! Write the necessary files to build a css file.
+  * @param data {string} The content for the js file.
+  * @param target {string} The output directory.
+  */</span>
+ css: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, target</span>) </span>{
+   mkdirp.sync(path.dirname(target));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Uglify and minify the content.</p></div></div><div class="code"><div class="wrapper">   <span class="hljs-keyword">var</span> content = uglifycss.processString(data, uglifyCssConfig);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>min</code> version.</p></div></div><div class="code"><div class="wrapper">   fs.writeFileSync(target + <span class="hljs-string">'.css'</span>, content, <span class="hljs-string">'utf8'</span>);
+   fs.writeFileSync(target + <span class="hljs-string">'-min.css'</span>, content, <span class="hljs-string">'utf8'</span>);
+ }
+};</div></div></div></div></body></html>

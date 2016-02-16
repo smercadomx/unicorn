@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/cli</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/cli"><meta name="groc-project-path" content="lib/cli.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">lib/cli.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<span class="hljs-keyword">var</span> builder = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./builder'</span>),
+    path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>),
+    findup = <span class="hljs-built_in">require</span>(<span class="hljs-string">'findup-sync'</span>),
+    logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">'winston'</span>),
+    fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>),
+    _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>),
+    chalk = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chalk'</span>),
+    configPath,
+    jshintrcPath,
+    watch = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-watch'</span>),
+    jsonminify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jsonminify'</span>),
+    config,
+    jshintrc;
+
+<span class="hljs-comment">/**! Run a single module build.
+ * @param current {string} The directory to build.
+ * @param callback {function} The callback to be called when the build is done.
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">build</span>(<span class="hljs-params">current, callback</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Searching for the <code>build.json</code> for the module to build.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">var</span> buildFile = findup(<span class="hljs-string">'build.json'</span>, {
+      cwd: path.normalize(current)
+    });
+
+  <span class="hljs-keyword">if</span> (!buildFile) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the <code>build.json</code> file is not found, it means that the directory is not a valid module.</p></div></div><div class="code"><div class="wrapper">    logger.error(chalk.red(<span class="hljs-string">'No build file found in this location.'</span>));
+    <span class="hljs-keyword">return</span>;
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Triggering the build.</p></div></div><div class="code"><div class="wrapper">  builder.buildModule(buildFile, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+    <span class="hljs-keyword">if</span> (err) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>An error occur, throw an exception.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(err);
+    } <span class="hljs-keyword">else</span> {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Build rollups, if any.</p></div></div><div class="code"><div class="wrapper">      builder.rollup(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>An error occur while building rollups, throw an exception.</p></div></div><div class="code"><div class="wrapper">          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(err);
+        }
+        logger.info(chalk.green(<span class="hljs-string">'Build successfully'</span>));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Call callback, if any.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">if</span> (callback) {
+          callback();
+        }
+      });
+    }
+  });
+}
+
+<span class="hljs-built_in">module</span>.exports =  {
+  <span class="hljs-comment">/**! Main entry for compilation
+   * @param options {object} The options entered by the user.
+   * @param callback {function} The callback to be called when the build is done.
+   */</span>
+  compile: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">options, callback</span>) </span>{
+    <span class="hljs-keyword">var</span> base = options.cwd || process.cwd(), packagePath;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Search for shifter configuration</p></div></div><div class="code"><div class="wrapper">    configPath = findup(<span class="hljs-string">'.shifter.json'</span>, {
+      cwd: options.cwd,
+      nocase: <span class="hljs-literal">true</span>
+    });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Search for jshint configuration</p></div></div><div class="code"><div class="wrapper">    jshintrcPath = findup(<span class="hljs-string">'.jshintrc'</span>, {
+      cwd: options.cwd,
+      nocase: <span class="hljs-literal">true</span>
+    });
+
+    <span class="hljs-keyword">if</span> (jshintrcPath) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>jshint</code> configuration found.</p></div></div><div class="code"><div class="wrapper">      jshintrc = <span class="hljs-built_in">JSON</span>.parse(jsonminify(fs.readFileSync(jshintrcPath, <span class="hljs-string">'utf8'</span>)));
+    }
+
+    <span class="hljs-keyword">if</span> (!configPath) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If not <code>.shifter.json</code> file was found throw an error.</p></div></div><div class="code"><div class="wrapper">      logger.error(chalk.red(<span class="hljs-string">'No .shifter.json file found.'</span>));
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No .shifter.json file found.'</span>);
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Configure the logger level with the configuration.</p></div></div><div class="code"><div class="wrapper">    logger.level = options.whisper? <span class="hljs-string">'error'</span>: options.roar? <span class="hljs-string">'silly'</span> : <span class="hljs-string">'info'</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Reading the ```.shifter.json file to obtain the basic configurations</p></div></div><div class="code"><div class="wrapper">    logger.info(chalk.blue(<span class="hljs-string">'Found .shifter file at '</span> + configPath));
+    config = <span class="hljs-built_in">JSON</span>.parse(jsonminify(fs.readFileSync(configPath, <span class="hljs-string">'utf8'</span>)));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Getting the target directory by doing the relative path with the current <code>.shifter.json</code> location.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">if</span> (config[<span class="hljs-string">'build-dir'</span>]) {
+      config.target = path.resolve(path.dirname(configPath), config[<span class="hljs-string">'build-dir'</span>]);
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Merging the configuration files with the user options</p></div></div><div class="code"><div class="wrapper">    config = _.merge(config, options);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Remove <code>replace-</code> from the replacers</p></div></div><div class="code"><div class="wrapper">    config = _.mapKeys(config, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, key</span>) </span>{
+      <span class="hljs-keyword">return</span> key.replace(<span class="hljs-regexp">/replace\-/g</span>, <span class="hljs-string">''</span>);
+    });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If no version was found in the <code>.shifter.json</code>, the version on the <code>package.json</code> is going to be used.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">if</span> (!config.version) {
+      packagePath = findup(<span class="hljs-string">'package.json'</span>, {
+        cwd: options.cwd,
+        nocase: <span class="hljs-literal">true</span>
+      });
+      config.version = <span class="hljs-built_in">JSON</span>.parse(jsonminify(fs.readFileSync(packagePath, <span class="hljs-string">'utf8'</span>))).version;
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Checking if <code>jshint</code> need to be used.</p></div></div><div class="code"><div class="wrapper">    config.lint = !(options.sprint || options.jumpjs);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Checking if <code>csslint</code> need to be used.</p></div></div><div class="code"><div class="wrapper">    config.csslint = !(options.sprint || options.jumpcss);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Loading the config to the builder.</p></div></div><div class="code"><div class="wrapper">    builder.load(config, jshintrc);
+
+    <span class="hljs-keyword">if</span> (options.watch) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Running watch builder.</p></div></div><div class="code"><div class="wrapper">      watch(base, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">filename</span>) </span>{
+        logger.profile(<span class="hljs-string">'watch'</span>);
+        <span class="hljs-keyword">try</span> {
+          build(filename);
+        } <span class="hljs-keyword">catch</span> (e) {
+          logger.error(chalk.red(<span class="hljs-string">'Build failed.'</span>));
+        }
+        logger.profile(<span class="hljs-string">'watch'</span>);
+      });
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (options.gallop) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run full build.</p></div></div><div class="code"><div class="wrapper">      logger.profile(<span class="hljs-string">'gallop'</span>);
+      builder.build(base, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(err);
+        }
+        logger.profile(<span class="hljs-string">'gallop'</span>);
+        <span class="hljs-keyword">if</span> (callback) {
+          callback()
+        }
+      });
+    } <span class="hljs-keyword">else</span> {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Running the single module build.</p></div></div><div class="code"><div class="wrapper">      logger.profile(<span class="hljs-string">'build'</span>);
+      build(base, callback);
+      logger.profile(<span class="hljs-string">'build'</span>);
+    }
+  }
+}</div></div></div></div></body></html>

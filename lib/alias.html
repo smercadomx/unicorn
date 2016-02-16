@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/alias</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/alias"><meta name="groc-project-path" content="lib/alias.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">lib/alias.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>),
+    fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>),
+    path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>),
+    jsonminify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jsonminify'</span>),
+    findup = <span class="hljs-built_in">require</span>(<span class="hljs-string">'findup-sync'</span>),
+    aliasPath,
+    id = <span class="hljs-number">0</span>,
+    cache = {};
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">next</span>(<span class="hljs-params"></span>) </span>{
+    id++;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Buffer(id + <span class="hljs-string">''</span>, <span class="hljs-string">'binary'</span>).toString(<span class="hljs-string">'base64'</span>).replace(<span class="hljs-regexp">/=/g</span>, <span class="hljs-string">''</span>);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateArray</span>(<span class="hljs-params">keys</span>) </span>{
+  <span class="hljs-keyword">var</span> result = [];
+  _.forEach(keys, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key</span>) </span>{
+    result.push(alias.get(key));
+  });
+  <span class="hljs-keyword">return</span> result;
+};
+
+<span class="hljs-keyword">var</span> alias = {
+  load: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> base = findup(<span class="hljs-string">'package.json'</span>, {
+      cwd: process.cwd(),
+      nocase: <span class="hljs-literal">true</span>
+    });
+
+    aliasPath = path.join(path.dirname(base), <span class="hljs-string">'alias.json'</span>);
+
+    <span class="hljs-keyword">if</span> (fs.existsSync(aliasPath)) {
+      cache = <span class="hljs-built_in">JSON</span>.parse(jsonminify(fs.readFileSync(aliasPath, <span class="hljs-string">'utf8'</span>))  || <span class="hljs-string">'{}'</span>);
+    }
+
+    id = _.keys(cache).length || <span class="hljs-number">0</span>;
+  },
+
+  save: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    fs.writeFileSync(aliasPath, <span class="hljs-built_in">JSON</span>.stringify(cache, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>));
+  },
+
+  get: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key</span>) </span>{
+    <span class="hljs-keyword">return</span> key;
+    <span class="hljs-keyword">if</span> (!key) {
+      <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (_.isArray(key)) {
+      <span class="hljs-keyword">return</span> generateArray(key);
+    }
+
+    <span class="hljs-keyword">if</span> (key.indexOf(<span class="hljs-string">'wf2-'</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">return</span> key;
+    }
+
+    <span class="hljs-keyword">if</span> (cache[key]) {
+      <span class="hljs-keyword">return</span> cache[key];
+    }
+
+    cache[key] = next();
+    <span class="hljs-keyword">return</span> cache[key];
+  }
+};
+
+<span class="hljs-built_in">module</span>.exports = alias;</div></div></div></div></body></html>

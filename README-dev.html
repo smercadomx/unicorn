@@ -1,0 +1,143 @@
+<!DOCTYPE html><html lang="en"><head><title>README-dev</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="README-dev"><meta name="groc-project-path" content="README-dev.md"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">README-dev.md</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="unicorn-dev-guide">Unicorn dev guide</h1>
+<h2 id="introduction">Introduction</h2>
+<p>The purpose of this document is to provide a high level understanding of the design and implementation for Unicorn. The document is intended for developers who want to understand and extend the platform features.</p>
+<h2 id="system-overview">System overview</h2>
+<p>The current build system is <a href="http://yui.github.io/shifter/">Shifter</a>. It have not had any change or improvement in long time. The decision was to create our own build tool.</p>
+<p>The scope of the project is to create a new build tool that is backward compatible with Shifter but faster and easier to maintain.</p>
+<p>The tool is a <a href="https://nodejs.org/en/">nodejs</a> module that can be executed through command line or imported by another module.</p>
+<h6 id="features">Features:</h6>
+<ul>
+<li>Wrap the code with YUI().use(), YUI.add() or nothing depending on the module configuration.</li>
+<li>Rollup creation.</li>
+<li>Linting with JSHint and CSSLint.</li>
+<li>Minification for JS, CSS and i18n files.</li>
+<li>Watch functionality to build on changes.</li>
+</ul>
+<h2 id="usage">Usage</h2>
+<ul>
+<li>Command line</li>
+</ul>
+<p>A node module needs to have a bin file to be executed on the terminal. The package.json file has the following attribute:</p>
+<pre><code>&quot;bin&quot;: {
+  &quot;unicorn &quot;./bin/unicorn&quot;
+}</code></pre>
+<p>This means that when executing <code>unicorn</code> on the terminal the script <code>bin/unicorn</code> will be executed.</p>
+<ul>
+<li>Import in another module</li>
+</ul>
+<p>Unicorn has a cli for other modules to access all the features provided. Add the following code your JS file:</p>
+<pre><code>ES5
+var unicorn = require(&#39;unicorn-tool/lib/cli&#39;);
+
+ES6
+import unicorn from &quot;unicorn-tool/lib/cli&quot;;</code></pre>
+<h2 id="under-the-hood">Under the hood</h2>
+<p>The only entry point is the <code>lib/cli.js</code> file. The <code>compile</code> function will receive the options set by the user and start the configuration:</p>
+<ul>
+<li>Search for .shifter.json</li>
+<li>Search for .jshintrc</li>
+<li>Setting logging level.</li>
+<li>Set the output path.</li>
+<li>Enable/disable CSSlint nad/or JSHint.</li>
+<li>Load all the configuration to the builder.</li>
+<li>Start the build<ul>
+<li>Watch</li>
+<li>Full build</li>
+<li>Build module</li>
+</ul>
+</li>
+</ul>
+<p>The builder (<code>lib/builder.js</code>) is in charge of the build process. Due to a backward compatibility requirement the <code>meta-data</code> and <code>build.json</code> is loaded for each module. Once we have all the properties for the modules the actual build can start:</p>
+<ul>
+<li>Remove the output path.</li>
+<li>Find the files to build.</li>
+<li>Pre-execute scripts.</li>
+<li>Wrap the source and write the output.</li>
+<li>Post-execute scripts.</li>
+<li>Copy the assets under the assets/ folder, if any.</li>
+<li>Create the rollups.</li>
+</ul>
+<p>The templates are using <a href="http://olado.github.io/doT/index.html">DoT</a> engine. They are under <code>lib/template/</code> folder. The templates are pre-compiled to increase the performance. Compiling them is as easy as running <code>grunt</code>. This is going to generate a <code>lib/templates.js</code> file that is imported to the builder.</p>
+<h6 id="js">JS</h6>
+<ul>
+<li>Concatenate the JS files mentioned on the <code>build.json</code>.</li>
+<li>Call the template for <code>use</code> or <code>add</code>.</li>
+<li>Prepend files.</li>
+<li>Append files.</li>
+<li>Replace values specified on the <code>.shifter.json</code> files as <code>replace--XXX</code>.</li>
+<li>Run JSHint.</li>
+<li>Run js-beautify.</li>
+<li>Create the debug version of the JS module.</li>
+<li>Run the regex to remove logging.</li>
+<li>Create the raw and the minify version of the JS module.</li>
+<li>Create the lang files, if any.</li>
+<li>Create the skin, if any.</li>
+</ul>
+<h6 id="css">CSS</h6>
+<ul>
+<li>Concatenate the CSS files mentioned on the <code>build.json</code>.</li>
+<li>Replace values specified on the <code>.shifter.json</code> files as <code>replace--XXX</code>.</li>
+<li>Run CSSLint.</li>
+<li>Run uglify-css.</li>
+<li>Write the raw and minify version.</li>
+</ul>
+<h6 id="skin">Skin</h6>
+<ul>
+<li>Find and read the core css file, if any.</li>
+<li>Append the core css to all the skins and treat it as a css file.</li>
+</ul>
+<h2 id="jshint-and-csslint-reporters">JSHint and CSSLint reporters</h2>
+<p>These two linting modules are being executed outside they reporting cycle. That is why custom reporters are needed. The folder <code>lib/reporters</code> contains terminal level reporters.</p>
+<p>If another type of report is needed a new module can be created taking into consideration the information provided by the third party modules:</p>
+<ul>
+<li><a href="https://github.com/CSSLint/csslint/wiki/Using-in-a-Node.js-Application">CSSLint</a></li>
+<li><a href="http://jshint.com/docs/api/">JSHint</a></li>
+</ul>
+<p>Finally change the reporters used by the builder.</p>
+<h2 id="testing">Testing</h2>
+<p>The unit test are based on <a href="https://mochajs.org/">Mochajs</a>, <a href="http://chaijs.com/">Chai</a> and <a href="http://sinonjs.org/">Sinon</a>.</p>
+<p>Running the test is as simple as <code>grunt test</code>.</p>
+<p>All the unit test are located in <code>tests/js</code> folder. There are two modules that work as mock scenarios to test the tool (module and dragon). The mock folder contains separate files to test specific scenarios for the writer.</p>
+<h2 id="documentation">Documentation</h2>
+<p>Documentation is based on <a href="https://github.com/nevir/groc">Groc</a>. It is not an API documentation but source code documentation. It is mean to be used by developer to understand what the code is doing and not how to interact as a third party module.</p>
+<p>Generating the documentation is as simple as <code>grunt docs</code>. The output path is <code>docs/</code>.</p>
+<h2 id="appendix-a">APPENDIX A</h2>
+<h6 id="dependencies">Dependencies</h6>
+<ul>
+<li>async (^1.5.2)</li>
+<li>chalk (^1.1.1)</li>
+<li>commander (^2.9.0)</li>
+<li>csslint (^0.10.0)</li>
+<li>cssproc (0.0.7)</li>
+<li>findup-sync (^0.3.0)</li>
+<li>glob (^6.0.1)</li>
+<li>grunt (^0.4.5)</li>
+<li>grunt-cli (^0.1.13)</li>
+<li>grunt-release (^0.13.0)</li>
+<li>js-beautify (^1.5.10)</li>
+<li>jshint (^2.9.1)</li>
+<li>jsonminify (^0.2.3)</li>
+<li>load-grunt-tasks (^3.4.0)</li>
+<li>lodash (^4.2.1)</li>
+<li>mkdirp (^0.5.1)</li>
+<li>node-watch (^0.3.5)</li>
+<li>rimraf (^2.5.1)</li>
+<li>sync-exec (^0.6.2)</li>
+<li>time-grunt (^1.3.0)</li>
+<li>uglify-js (^2.6.1)</li>
+<li>uglifycss (0.0.19)</li>
+<li>winston (^2.1.1)</li>
+</ul>
+<h6 id="dev-dependencies">Dev Dependencies</h6>
+<ul>
+<li>dot (^1.0.3)</li>
+<li>chai (^3.5.0)</li>
+<li>grunt-blanket (0.0.9)</li>
+<li>grunt-contrib-clean (^0.7.0)</li>
+<li>grunt-contrib-copy (^0.8.2)</li>
+<li>grunt-groc (^0.6.0)</li>
+<li>grunt-mocha-test (^0.12.7)</li>
+<li>mocha (^2.4.5)</li>
+<li>sinon (^1.17.3)</li>
+<li>travis-cov (^0.2.5)</li>
+</ul></div></div></div></div></body></html>

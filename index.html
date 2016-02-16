@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">README.md</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h3 id="unicorn">Unicorn</h3>
+<p><img src="https://travis-ci.org/jrubstein/unicorn.svg?branch=master" alt="travis">
+<a href="https://david-dm.org/jrubstein/unicorn"><img src="https://david-dm.org/jrubstein/unicorn.svg" alt="Dependency Status"></a>
+<a href="https://david-dm.org/jrubstein/unicorn#info=devDependencies"><img src="https://david-dm.org/jrubstein/unicorn/dev-status.svg" alt="devDependency Status"></a></p>
+<p>Simple build platform for wria2 and sheath projects.</p>
+<h6 id="features">Features:</h6>
+<ul>
+<li>Wrap the code with YUI().use(), YUI.add() or nothing depending on the module configuration.</li>
+<li>Rollup creation.</li>
+<li>Linting with JSHint and CSSLint.</li>
+<li>Minification for JS, CSS and i18n files.</li>
+<li>Watch functionality to build on demand.</li>
+</ul>
+<h6 id="usage">Usage</h6>
+<p>  unicorn [options]</p>
+<p>  Options:</p>
+<pre><code>-h, --help     output usage information
+-V, --version  output the version number
+--watch        Starts the watcher
+-g, --gallop   Starts a full build
+-w, --whisper  Sets logger to error only
+-r, --roar     Adds verbose
+-s, --sprint   Disable jshint and csslint
+--jumpjs       Disable jshint
+--jumpcss      Disable csslint
+-d, --dry      Dry run
+--cwd &lt;path&gt;   Sets the base path for the build</code></pre>
+<h6 id="examples">Examples</h6>
+<ul>
+<li><p>Build a module</p>
+<pre><code>unicorn</code></pre>
+</li>
+<li><p>Build a module skipping linting and setting the logger to error</p>
+<pre><code>unicorn -s -w</code></pre>
+</li>
+<li><p>Building the whole project</p>
+<pre><code>unicorn -g --cwd &lt;path to the root of the project&gt;</code></pre>
+</li>
+<li><p>Run watch command</p>
+<pre><code>unicorn --watch --cwd &lt;path to the root of the project&gt;</code></pre>
+</li>
+</ul>
+<h6 id="development">Development</h6>
+<p>Contributing to the projects is simple. Follow these steps:</p>
+<ul>
+<li>Clone the repository</li>
+<li>Run <code>npm install .</code> on the root level.</li>
+<li>Run <code>grunt</code> on the root level.</li>
+<li>Run <code>npm link .</code> to get global access to unicorn.</li>
+<li>Run <code>grunt test</code> to run the unit tests.</li>
+</ul>
+<p>Once the changes are complete, create a pull request.</p></div></div></div></div></body></html>
