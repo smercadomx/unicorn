@@ -31,7 +31,7 @@ Usage
 A node module needs to have a bin file to be executed on the terminal. The package.json file has the following attribute:
 
     "bin": {
-      "unicorn (./bin/unicorn"
+      "unicorn "./bin/unicorn"
     }
 
 This means that when executing ```unicorn``` on the terminal the script ```bin/unicorn``` will be executed.
@@ -123,9 +123,14 @@ The unit test are based on [Mochajs](https://mochajs.org/), [Chai](http://chaijs
 
 Running the test is as simple as ```grunt test```.
 
+All the unit test are located in ```tests/js``` folder. There are two modules that work as mock scenarios to test the tool (module and dragon). The mock folder contains separate files to test specific scenarios for the writer.
 
-All the unit test are located in ```tests/js``` folder. There are two modules that work as mock scenarios to test the tool (module and dragon). The mock foler contains separate files to test specific scenarios for the writer.
+Documentation
+---------------------
 
+Documentation is based on [Groc](https://github.com/nevir/groc). It is not an API documentation but source code documentation. It is mean to be used by developer to understand what the code is doing and not how to interact as a third party module.
+
+Generating the documentation is as simple as ```grunt docs```. The output path is ```docs/```.
 
 APPENDIX A
 ---------------------
@@ -163,6 +168,7 @@ APPENDIX A
 * grunt-blanket (0.0.9)
 * grunt-contrib-clean (^0.7.0)
 * grunt-contrib-copy (^0.8.2)
+* grunt-groc (^0.6.0)
 * grunt-mocha-test (^0.12.7)
 * mocha (^2.4.5)
 * sinon (^1.17.3)

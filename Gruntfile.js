@@ -18,6 +18,9 @@ module.exports = function(grunt) {
     clean: {
        coverage: {
          src: ['./coverage/']
+       },
+       docs: {
+         src: ['./docs/']
        }
      },
      copy: {
@@ -53,16 +56,27 @@ module.exports = function(grunt) {
          },
          src: ['./coverage/tests/js/**/*.js']
        }
-     }
+     },
+    groc: {
+      javascript: [
+        "lib/**/*.js", "README.md", "README-dev.md"
+      ],
+      options: {
+        out: 'docs'
+      }
+    }
   });
 
-
+  grunt.loadNpmTasks('grunt-groc');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-blanket');
-  grunt.registerTask('default', 'precompile');
-  grunt.registerTask('test', ['clean', 'blanket', 'copy', 'mochaTest']);
+
+  grunt.registerTask('default', ['precompile', 'test', 'docs']);
+  grunt.registerTask('test', ['clean:coverage', 'blanket', 'copy', 'mochaTest']);
+  grunt.registerTask('docs', ['clean:docs', 'groc']);
+
   grunt.registerTask('precompile', 'Pre-compile templates', function() {
     var output = '',
         dots = dot.process({
@@ -73,6 +87,7 @@ module.exports = function(grunt) {
         });
 
     _.forEach(dots, function(value, key) {
+      output += '// Template for ' + key + EOL;
       output += 'exports.' + key + '=' + value + ';' + EOL;
     });
 

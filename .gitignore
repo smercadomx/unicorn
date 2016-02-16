@@ -3,3 +3,4 @@ lib/templates.js
 .DS_Store
 coverage/
 aux/
+docs/
