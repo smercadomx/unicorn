@@ -64,9 +64,18 @@ module.exports = function(grunt) {
       options: {
         out: 'docs'
       }
+    },
+    'gh-pages': {
+      options: {
+        base: 'docs',
+        dotfiles: true,
+        message: 'Publish Groc documentation'
+      },
+      src: ['**/*']
     }
   });
 
+  grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-groc');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -76,6 +85,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['precompile', 'test', 'docs']);
   grunt.registerTask('test', ['clean:coverage', 'blanket', 'copy', 'mochaTest']);
   grunt.registerTask('docs', ['clean:docs', 'groc']);
+  grunt.registerTask('deploy', ['precompile', 'test', 'docs', 'gh-pages', 'release']);
 
   grunt.registerTask('precompile', 'Pre-compile templates', function() {
     var output = '',
