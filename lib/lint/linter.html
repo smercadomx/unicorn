@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/lint/linter</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="lib/lint/linter"><meta name="groc-project-path" content="lib/lint/linter.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">lib/lint/linter.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>),
+  jshint = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jshint/src/jshint'</span>).JSHINT,
+  jshintReporter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./reporters/jshint'</span>),
+  eslint = <span class="hljs-built_in">require</span>(<span class="hljs-string">"eslint"</span>).linter,
+  eslintReporter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./reporters/eslint'</span>),
+  cssLint = <span class="hljs-built_in">require</span>(<span class="hljs-string">'csslint'</span>).CSSLint,
+  csslintReporter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./reporters/csslint'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>List of linters available.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> linters = {
+  <span class="hljs-comment">/**! Run a jshint on the content with the given config.
+   *
+   * The content is valid if no fatal errors are found.
+   * @param content {string} The content to verify.
+   * @param config {object} The configuration for the linter.
+   * @param name {string} The name of the current module.
+   * @return True if the content is valid, false otherwise.
+   */</span>
+  jshint: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">content, config, name</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run the linter.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> valid = jshint(content, config);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Show to result to the user.</p></div></div><div class="code"><div class="wrapper">    jshintReporter.report(jshint.data(), name);
+    <span class="hljs-keyword">return</span> valid;
+  },
+
+  <span class="hljs-comment">/**! Run a eslint on the content with the given config.
+   *
+   * The content is valid if no fatal errors are found.
+   * @param content {string} The content to verify.
+   * @param config {object} The configuration for the linter.
+   * @param name {string} The name of the current module.
+   * @return True if the content is valid, false otherwise.
+   */</span>
+  eslint: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">content, config, name</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run the linter.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> data = eslint.verify(content, config);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Show to result to the user.</p></div></div><div class="code"><div class="wrapper">    eslintReporter.report(data, name);
+    <span class="hljs-keyword">return</span> _.find(data, {fatal: <span class="hljs-literal">true</span>}) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;
+  },
+
+  <span class="hljs-comment">/**! Run a csslint on the content with the given config.
+   *
+   * The content is valid if no fatal errors are found.
+   * @param content {string} The content to verify.
+   * @param config {object} The configuration for the linter.
+   * @param name {string} The name of the current module.
+   * @return True if the content is valid, false otherwise.
+   */</span>
+  csslint: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">content, config, name</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run the linter.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> result = cssLint.verify(content, config);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Show to result to the user.</p></div></div><div class="code"><div class="wrapper">    csslintReporter.report(result, name);
+    <span class="hljs-keyword">return</span> _.find(result.messages, {type: <span class="hljs-string">'error'</span>}) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;
+  }
+};
+
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-comment">/**! Run the given linter on the content with the given config.
+   *
+   * The content is valid if no fatal errors are found.
+   * @param linter {string} The linter to run.
+   * @param content {string} The content to verify.
+   * @param config {object} The configuration for the linter.
+   * @param name {string} The name of the current module.
+   * @return True if the content is valid, false otherwise.
+   */</span>
+  verify: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">linter, content, config, name</span>) </span>{
+    <span class="hljs-keyword">return</span> linters[linter || <span class="hljs-string">'jshint'</span>](content, config, name);
+  }
+};</div></div></div></div></body></html>

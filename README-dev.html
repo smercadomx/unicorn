@@ -9,7 +9,7 @@
 <ul>
 <li>Wrap the code with YUI().use(), YUI.add() or nothing depending on the module configuration.</li>
 <li>Rollup creation.</li>
-<li>Linting with JSHint and CSSLint.</li>
+<li>Linting with JS linter (JSHint or ESLint) and CSSLint.</li>
 <li>Minification for JS, CSS and i18n files.</li>
 <li>Watch functionality to build on changes.</li>
 </ul>
@@ -35,10 +35,10 @@ import unicorn from &quot;unicorn-tool/lib/cli&quot;;</code></pre>
 <p>The only entry point is the <code>lib/cli.js</code> file. The <code>compile</code> function will receive the options set by the user and start the configuration:</p>
 <ul>
 <li>Search for .shifter.json</li>
-<li>Search for .jshintrc</li>
+<li>Search for .jshintrc or .eslintrc.</li>
 <li>Setting logging level.</li>
 <li>Set the output path.</li>
-<li>Enable/disable CSSlint nad/or JSHint.</li>
+<li>Enable/disable CSSlint nad/or JSHint/ESLint.</li>
 <li>Load all the configuration to the builder.</li>
 <li>Start the build<ul>
 <li>Watch</li>
@@ -65,8 +65,7 @@ import unicorn from &quot;unicorn-tool/lib/cli&quot;;</code></pre>
 <li>Prepend files.</li>
 <li>Append files.</li>
 <li>Replace values specified on the <code>.shifter.json</code> files as <code>replace--XXX</code>.</li>
-<li>Run JSHint.</li>
-<li>Run js-beautify.</li>
+<li>Run JS lint.</li>
 <li>Create the debug version of the JS module.</li>
 <li>Run the regex to remove logging.</li>
 <li>Create the raw and the minify version of the JS module.</li>
@@ -86,58 +85,27 @@ import unicorn from &quot;unicorn-tool/lib/cli&quot;;</code></pre>
 <li>Find and read the core css file, if any.</li>
 <li>Append the core css to all the skins and treat it as a css file.</li>
 </ul>
-<h2 id="jshint-and-csslint-reporters">JSHint and CSSLint reporters</h2>
-<p>These two linting modules are being executed outside they reporting cycle. That is why custom reporters are needed. The folder <code>lib/reporters</code> contains terminal level reporters.</p>
+<h2 id="js-lint-and-csslint">JS Lint and CSSLint</h2>
+<p><code>JSHint</code> is the linter used by default.</p>
+<p>The linters are not manually selected. The tool searches for the configuration files on the working directory:</p>
+<ul>
+<li>ESLint uses <code>.eslintrc</code>.</li>
+<li>JSHint uses <code>.jshintrc</code>.</li>
+</ul>
+<p><code>ESlint</code> has higher priority. This means that if the file <code>.eslintrc</code> is found <code>ESLint</code> is used, otherwise JSHint is used.</p>
+<h6 id="reporters">Reporters</h6>
+<p>These linters modules are being executed using they API and not the binary. That is why custom reporters are needed. The folder <code>lib/lint/reporters</code> contains terminal level reporters.</p>
 <p>If another type of report is needed a new module can be created taking into consideration the information provided by the third party modules:</p>
 <ul>
 <li><a href="https://github.com/CSSLint/csslint/wiki/Using-in-a-Node.js-Application">CSSLint</a></li>
 <li><a href="http://jshint.com/docs/api/">JSHint</a></li>
+<li><a href="http://eslint.org/docs/developer-guide/nodejs-api">ESLint</a></li>
 </ul>
-<p>Finally change the reporters used by the builder.</p>
+<p>Finally change the reporters used by the lint module.</p>
 <h2 id="testing">Testing</h2>
 <p>The unit test are based on <a href="https://mochajs.org/">Mochajs</a>, <a href="http://chaijs.com/">Chai</a> and <a href="http://sinonjs.org/">Sinon</a>.</p>
 <p>Running the test is as simple as <code>grunt test</code>.</p>
 <p>All the unit test are located in <code>tests/js</code> folder. There are two modules that work as mock scenarios to test the tool (module and dragon). The mock folder contains separate files to test specific scenarios for the writer.</p>
 <h2 id="documentation">Documentation</h2>
 <p>Documentation is based on <a href="https://github.com/nevir/groc">Groc</a>. It is not an API documentation but source code documentation. It is mean to be used by developer to understand what the code is doing and not how to interact as a third party module.</p>
-<p>Generating the documentation is as simple as <code>grunt docs</code>. The output path is <code>docs/</code>.</p>
-<h2 id="appendix-a">APPENDIX A</h2>
-<h6 id="dependencies">Dependencies</h6>
-<ul>
-<li>async (^1.5.2)</li>
-<li>chalk (^1.1.1)</li>
-<li>commander (^2.9.0)</li>
-<li>csslint (^0.10.0)</li>
-<li>cssproc (0.0.7)</li>
-<li>findup-sync (^0.3.0)</li>
-<li>glob (^6.0.1)</li>
-<li>grunt (^0.4.5)</li>
-<li>grunt-cli (^0.1.13)</li>
-<li>grunt-release (^0.13.0)</li>
-<li>js-beautify (^1.5.10)</li>
-<li>jshint (^2.9.1)</li>
-<li>jsonminify (^0.2.3)</li>
-<li>load-grunt-tasks (^3.4.0)</li>
-<li>lodash (^4.2.1)</li>
-<li>mkdirp (^0.5.1)</li>
-<li>node-watch (^0.3.5)</li>
-<li>rimraf (^2.5.1)</li>
-<li>sync-exec (^0.6.2)</li>
-<li>time-grunt (^1.3.0)</li>
-<li>uglify-js (^2.6.1)</li>
-<li>uglifycss (0.0.19)</li>
-<li>winston (^2.1.1)</li>
-</ul>
-<h6 id="dev-dependencies">Dev Dependencies</h6>
-<ul>
-<li>dot (^1.0.3)</li>
-<li>chai (^3.5.0)</li>
-<li>grunt-blanket (0.0.9)</li>
-<li>grunt-contrib-clean (^0.7.0)</li>
-<li>grunt-contrib-copy (^0.8.2)</li>
-<li>grunt-groc (^0.6.0)</li>
-<li>grunt-mocha-test (^0.12.7)</li>
-<li>mocha (^2.4.5)</li>
-<li>sinon (^1.17.3)</li>
-<li>travis-cov (^0.2.5)</li>
-</ul></div></div></div></div></body></html>
+<p>Generating the documentation is as simple as <code>grunt docs</code>. The output path is <code>docs/</code>.</p></div></div></div></div></body></html>

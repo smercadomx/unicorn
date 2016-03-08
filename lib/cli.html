@@ -7,11 +7,11 @@
     _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>),
     chalk = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chalk'</span>),
     configPath,
-    jshintrcPath,
+    lintrcPath,
     watch = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-watch'</span>),
     jsonminify = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jsonminify'</span>),
     config,
-    jshintrc;
+    lintConfig;
 
 <span class="hljs-comment">/**! Run a single module build.
  * @param current {string} The directory to build.
@@ -45,13 +45,7 @@
     <span class="hljs-keyword">var</span> base = options.cwd || process.cwd(), packagePath;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Search for shifter configuration</p></div></div><div class="code"><div class="wrapper">    configPath = findup(<span class="hljs-string">'.shifter.json'</span>, {
       cwd: options.cwd,
       nocase: <span class="hljs-literal">true</span>
-    });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Search for jshint configuration</p></div></div><div class="code"><div class="wrapper">    jshintrcPath = findup(<span class="hljs-string">'.jshintrc'</span>, {
-      cwd: options.cwd,
-      nocase: <span class="hljs-literal">true</span>
     });
-
-    <span class="hljs-keyword">if</span> (jshintrcPath) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>jshint</code> configuration found.</p></div></div><div class="code"><div class="wrapper">      jshintrc = <span class="hljs-built_in">JSON</span>.parse(jsonminify(fs.readFileSync(jshintrcPath, <span class="hljs-string">'utf8'</span>)));
-    }
 
     <span class="hljs-keyword">if</span> (!configPath) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If not <code>.shifter.json</code> file was found throw an error.</p></div></div><div class="code"><div class="wrapper">      logger.error(chalk.red(<span class="hljs-string">'No .shifter.json file found.'</span>));
       <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No .shifter.json file found.'</span>);
@@ -66,7 +60,22 @@
         nocase: <span class="hljs-literal">true</span>
       });
       config.version = <span class="hljs-built_in">JSON</span>.parse(jsonminify(fs.readFileSync(packagePath, <span class="hljs-string">'utf8'</span>))).version;
-    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Checking if <code>jshint</code> need to be used.</p></div></div><div class="code"><div class="wrapper">    config.lint = !(options.sprint || options.jumpjs);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Checking if <code>csslint</code> need to be used.</p></div></div><div class="code"><div class="wrapper">    config.csslint = !(options.sprint || options.jumpcss);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Loading the config to the builder.</p></div></div><div class="code"><div class="wrapper">    builder.load(config, jshintrc);
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Set linter to <code>eslint</code>.</p></div></div><div class="code"><div class="wrapper">    config.linter = <span class="hljs-string">'eslint'</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Search for <code>eslint</code> configuration</p></div></div><div class="code"><div class="wrapper">    lintrcPath = findup(<span class="hljs-string">'.eslintrc'</span>, {
+      cwd: options.cwd,
+      nocase: <span class="hljs-literal">true</span>
+    });
+
+    <span class="hljs-keyword">if</span> (!lintrcPath) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Set linter to <code>jshint</code>.</p></div></div><div class="code"><div class="wrapper">      config.linter = <span class="hljs-string">'jshint'</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Search for <code>jshint</code> configuration</p></div></div><div class="code"><div class="wrapper">      lintrcPath = findup(<span class="hljs-string">'.jshintrc'</span>, {
+        cwd: options.cwd,
+        nocase: <span class="hljs-literal">true</span>
+      });
+    }
+
+    <span class="hljs-keyword">if</span> (lintrcPath) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Linting configuration found.</p></div></div><div class="code"><div class="wrapper">      lintConfig = <span class="hljs-built_in">JSON</span>.parse(jsonminify(fs.readFileSync(lintrcPath, <span class="hljs-string">'utf8'</span>)));
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Checking if <code>jshint</code> need to be used.</p></div></div><div class="code"><div class="wrapper">    config.lint = !(options.sprint || options.jumpjs);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Checking if <code>csslint</code> need to be used.</p></div></div><div class="code"><div class="wrapper">    config.csslint = !(options.sprint || options.jumpcss);
+    <span class="hljs-keyword">if</span> (config.lint) {
+      logger.debug(chalk.cyan(<span class="hljs-string">'Linter: '</span> + config.linter));
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Loading the config to the builder.</p></div></div><div class="code"><div class="wrapper">    builder.load(config, lintConfig);
 
     <span class="hljs-keyword">if</span> (options.watch) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Running watch builder.</p></div></div><div class="code"><div class="wrapper">      watch(base, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">filename</span>) </span>{
         logger.profile(<span class="hljs-string">'watch'</span>);

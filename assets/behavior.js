@@ -58,6 +58,14 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 6,
+                "title": "JShint or ESLint",
+                "slug": "jshint-or-eslint"
+              },
+              "depth": 6
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 6,
                 "title": "Development",
                 "slug": "development"
               },
@@ -162,10 +170,21 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "JSHint and CSSLint reporters",
-                "slug": "jshint-and-csslint-reporters"
+                "title": "JS Lint and CSSLint",
+                "slug": "js-lint-and-csslint"
               },
-              "depth": 2
+              "depth": 2,
+              "children": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 6,
+                    "title": "Reporters",
+                    "slug": "reporters"
+                  },
+                  "depth": 6
+                }
+              ]
             }, {
               "type": "heading",
               "data": {
@@ -182,33 +201,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "slug": "documentation"
               },
               "depth": 2
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 2,
-                "title": "APPENDIX A",
-                "slug": "appendix-a"
-              },
-              "depth": 2,
-              "children": [
-                {
-                  "type": "heading",
-                  "data": {
-                    "level": 6,
-                    "title": "Dependencies",
-                    "slug": "dependencies"
-                  },
-                  "depth": 6
-                }, {
-                  "type": "heading",
-                  "data": {
-                    "level": 6,
-                    "title": "Dev Dependencies",
-                    "slug": "dev-dependencies"
-                  },
-                  "depth": 6
-                }
-              ]
             }
           ]
         },
@@ -290,10 +282,21 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "type": "heading",
           "data": {
             "level": 2,
-            "title": "JSHint and CSSLint reporters",
-            "slug": "jshint-and-csslint-reporters"
+            "title": "JS Lint and CSSLint",
+            "slug": "js-lint-and-csslint"
           },
-          "depth": 2
+          "depth": 2,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 6,
+                "title": "Reporters",
+                "slug": "reporters"
+              },
+              "depth": 6
+            }
+          ]
         }, {
           "type": "heading",
           "data": {
@@ -310,33 +313,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "slug": "documentation"
           },
           "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "APPENDIX A",
-            "slug": "appendix-a"
-          },
-          "depth": 2,
-          "children": [
-            {
-              "type": "heading",
-              "data": {
-                "level": 6,
-                "title": "Dependencies",
-                "slug": "dependencies"
-              },
-              "depth": 6
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 6,
-                "title": "Dev Dependencies",
-                "slug": "dev-dependencies"
-              },
-              "depth": 6
-            }
-          ]
         }
       ]
     }, {
@@ -410,8 +386,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         }, {
           "type": "folder",
           "data": {
-            "path": "lib/reporters",
-            "title": "reporters"
+            "path": "lib/lint",
+            "title": "lint"
           },
           "depth": 2,
           "children": [
@@ -427,34 +403,84 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                   "foldPrefix": "^",
                   "name": "JavaScript"
                 },
-                "sourcePath": "/Users/u280285/work/src/unicorn/lib/reporters/csslint.js",
-                "projectPath": "lib/reporters/csslint.js",
-                "targetPath": "lib/reporters/csslint",
-                "pageTitle": "lib/reporters/csslint",
-                "title": "csslint"
+                "sourcePath": "/Users/u280285/work/src/unicorn/lib/lint/linter.js",
+                "projectPath": "lib/lint/linter.js",
+                "targetPath": "lib/lint/linter",
+                "pageTitle": "lib/lint/linter",
+                "title": "linter"
               },
               "depth": 3,
               "outline": []
             }, {
-              "type": "file",
+              "type": "folder",
               "data": {
-                "language": {
-                  "nameMatchers": [".js"],
-                  "pygmentsLexer": "javascript",
-                  "multiLineComment": ["/*", "*", "*/"],
-                  "singleLineComment": ["//"],
-                  "ignorePrefix": "}",
-                  "foldPrefix": "^",
-                  "name": "JavaScript"
-                },
-                "sourcePath": "/Users/u280285/work/src/unicorn/lib/reporters/jshint.js",
-                "projectPath": "lib/reporters/jshint.js",
-                "targetPath": "lib/reporters/jshint",
-                "pageTitle": "lib/reporters/jshint",
-                "title": "jshint"
+                "path": "lib/lint/reporters",
+                "title": "reporters"
               },
               "depth": 3,
-              "outline": []
+              "children": [
+                {
+                  "type": "file",
+                  "data": {
+                    "language": {
+                      "nameMatchers": [".js"],
+                      "pygmentsLexer": "javascript",
+                      "multiLineComment": ["/*", "*", "*/"],
+                      "singleLineComment": ["//"],
+                      "ignorePrefix": "}",
+                      "foldPrefix": "^",
+                      "name": "JavaScript"
+                    },
+                    "sourcePath": "/Users/u280285/work/src/unicorn/lib/lint/reporters/csslint.js",
+                    "projectPath": "lib/lint/reporters/csslint.js",
+                    "targetPath": "lib/lint/reporters/csslint",
+                    "pageTitle": "lib/lint/reporters/csslint",
+                    "title": "csslint"
+                  },
+                  "depth": 4,
+                  "outline": []
+                }, {
+                  "type": "file",
+                  "data": {
+                    "language": {
+                      "nameMatchers": [".js"],
+                      "pygmentsLexer": "javascript",
+                      "multiLineComment": ["/*", "*", "*/"],
+                      "singleLineComment": ["//"],
+                      "ignorePrefix": "}",
+                      "foldPrefix": "^",
+                      "name": "JavaScript"
+                    },
+                    "sourcePath": "/Users/u280285/work/src/unicorn/lib/lint/reporters/eslint.js",
+                    "projectPath": "lib/lint/reporters/eslint.js",
+                    "targetPath": "lib/lint/reporters/eslint",
+                    "pageTitle": "lib/lint/reporters/eslint",
+                    "title": "eslint"
+                  },
+                  "depth": 4,
+                  "outline": []
+                }, {
+                  "type": "file",
+                  "data": {
+                    "language": {
+                      "nameMatchers": [".js"],
+                      "pygmentsLexer": "javascript",
+                      "multiLineComment": ["/*", "*", "*/"],
+                      "singleLineComment": ["//"],
+                      "ignorePrefix": "}",
+                      "foldPrefix": "^",
+                      "name": "JavaScript"
+                    },
+                    "sourcePath": "/Users/u280285/work/src/unicorn/lib/lint/reporters/jshint.js",
+                    "projectPath": "lib/lint/reporters/jshint.js",
+                    "targetPath": "lib/lint/reporters/jshint",
+                    "pageTitle": "lib/lint/reporters/jshint",
+                    "title": "jshint"
+                  },
+                  "depth": 4,
+                  "outline": []
+                }
+              ]
             }
           ]
         }, {
