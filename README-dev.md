@@ -19,7 +19,7 @@ The tool is a [nodejs](https://nodejs.org/en/) module that can be executed throu
 
 * Wrap the code with YUI().use(), YUI.add() or nothing depending on the module configuration.
 * Rollup creation.
-* Linting with JSHint and CSSLint.
+* Linting with JS linter (JSHint or ESLint) and CSSLint.
 * Minification for JS, CSS and i18n files.
 * Watch functionality to build on changes.
 
@@ -52,10 +52,10 @@ Under the hood
 The only entry point is the ```lib/cli.js``` file. The ```compile``` function will receive the options set by the user and start the configuration:
 
 * Search for .shifter.json
-* Search for .jshintrc
+* Search for .jshintrc or .eslintrc.
 * Setting logging level.
 * Set the output path.
-* Enable/disable CSSlint nad/or JSHint.
+* Enable/disable CSSlint nad/or JSHint/ESLint.
 * Load all the configuration to the builder.
 * Start the build
     * Watch
@@ -82,8 +82,7 @@ The templates are using [DoT](http://olado.github.io/doT/index.html) engine. The
 * Prepend files.
 * Append files.
 * Replace values specified on the ```.shifter.json``` files as ```replace--XXX```.
-* Run JSHint.
-* Run js-beautify.
+* Run JS lint.
 * Create the debug version of the JS module.
 * Run the regex to remove logging.
 * Create the raw and the minify version of the JS module.
@@ -104,17 +103,28 @@ The templates are using [DoT](http://olado.github.io/doT/index.html) engine. The
 * Find and read the core css file, if any.
 * Append the core css to all the skins and treat it as a css file.
 
-JSHint and CSSLint reporters
+JS Lint and CSSLint
 ---------------------
+```JSHint``` is the linter used by default.
 
-These two linting modules are being executed outside they reporting cycle. That is why custom reporters are needed. The folder ```lib/reporters``` contains terminal level reporters.
+The linters are not manually selected. The tool searches for the configuration files on the working directory:
+
+* ESLint uses ```.eslintrc```.
+* JSHint uses ```.jshintrc```.
+
+```ESlint``` has higher priority. This means that if the file ```.eslintrc``` is found ```ESLint``` is used, otherwise JSHint is used.
+
+###### Reporters
+
+These linters modules are being executed using they API and not the binary. That is why custom reporters are needed. The folder ```lib/lint/reporters``` contains terminal level reporters.
 
 If another type of report is needed a new module can be created taking into consideration the information provided by the third party modules:
 
 * [CSSLint](https://github.com/CSSLint/csslint/wiki/Using-in-a-Node.js-Application)
 * [JSHint](http://jshint.com/docs/api/)
+* [ESLint](http://eslint.org/docs/developer-guide/nodejs-api)
 
-Finally change the reporters used by the builder.
+Finally change the reporters used by the lint module.
 
 Testing
 ---------------------
@@ -131,45 +141,3 @@ Documentation
 Documentation is based on [Groc](https://github.com/nevir/groc). It is not an API documentation but source code documentation. It is mean to be used by developer to understand what the code is doing and not how to interact as a third party module.
 
 Generating the documentation is as simple as ```grunt docs```. The output path is ```docs/```.
-
-APPENDIX A
----------------------
-
-###### Dependencies
-
-* async (^1.5.2)
-* chalk (^1.1.1)
-* commander (^2.9.0)
-* csslint (^0.10.0)
-* cssproc (0.0.7)
-* findup-sync (^0.3.0)
-* glob (^6.0.1)
-* grunt (^0.4.5)
-* grunt-cli (^0.1.13)
-* grunt-release (^0.13.0)
-* js-beautify (^1.5.10)
-* jshint (^2.9.1)
-* jsonminify (^0.2.3)
-* load-grunt-tasks (^3.4.0)
-* lodash (^4.2.1)
-* mkdirp (^0.5.1)
-* node-watch (^0.3.5)
-* rimraf (^2.5.1)
-* sync-exec (^0.6.2)
-* time-grunt (^1.3.0)
-* uglify-js (^2.6.1)
-* uglifycss (0.0.19)
-* winston (^2.1.1)
-
-###### Dev Dependencies
-
-* dot (^1.0.3)
-* chai (^3.5.0)
-* grunt-blanket (0.0.9)
-* grunt-contrib-clean (^0.7.0)
-* grunt-contrib-copy (^0.8.2)
-* grunt-groc (^0.6.0)
-* grunt-mocha-test (^0.12.7)
-* mocha (^2.4.5)
-* sinon (^1.17.3)
-* travis-cov (^0.2.5)
