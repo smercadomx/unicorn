@@ -4,3 +4,4 @@ lib/templates.js
 coverage/
 aux/
 docs/
+.grunt/
