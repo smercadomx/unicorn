@@ -208,6 +208,33 @@ describe('Builder', function() {
       }
     });
 
+    it('build-rollup', function () {
+      var outputPath = path.join(target, 'test'),
+        content;
+      builder.load({
+        gallop: true,
+        version: '1.0.0',
+        target: target,
+        dry: false
+      });
+      builder.build(source, function(err) {
+        assert.isUndefined(err);
+      });
+      try {
+        // Rollup
+        fs.statSync(path.join(target, 'test-pkg', 'test-pkg.js'));
+        fs.statSync(path.join(target, 'test-pkg', 'test-pkg-debug.js'));
+        fs.statSync(path.join(target, 'test-pkg', 'test-pkg-min.js'));
+      } catch (e) {
+        assert.fail('Some file is missing', '', 'Some file is missing: ' + e.message);
+      }
+      // Lang
+      content = fs.readFileSync(path.join(target, 'test-pkg', 'test-pkg.js'), 'utf8');
+      assert.isTrue(content.indexOf('lang/test_en') > 0);
+      assert.isTrue(content.indexOf('lang/test_es') > 0);
+      assert.isTrue(content.indexOf('lang/test_fr') < 0);
+    });
+
     it('build-error', function () {
       builder.load({
         gallop: true,

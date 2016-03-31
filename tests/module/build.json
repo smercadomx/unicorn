@@ -33,6 +33,7 @@
   "rollups": {
     "test-pkg": {
       "name": "test-pkg",
+      "lang": ["en", "es"],
       "files": [
         "test",
         "test-submodule"
