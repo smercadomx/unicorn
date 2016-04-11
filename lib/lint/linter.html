@@ -27,7 +27,7 @@
    * @return True if the content is valid, false otherwise.
    */</span>
   eslint: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">content, config, name</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run the linter.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> data = eslint.verify(content, config);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Show to result to the user.</p></div></div><div class="code"><div class="wrapper">    eslintReporter.report(data, name);
-    <span class="hljs-keyword">return</span> _.find(data, {fatal: <span class="hljs-literal">true</span>}) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> _.find(data, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error</span>) </span>{ <span class="hljs-keyword">return</span> error.severity &amp;&amp; error.severity &gt; <span class="hljs-number">1</span>}) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;
   },
 
   <span class="hljs-comment">/**! Run a csslint on the content with the given config.
