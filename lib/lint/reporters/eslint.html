@@ -2,6 +2,7 @@
 <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>),
   chalk = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chalk'</span>),
   logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">'winston'</span>),
+  EOL = <span class="hljs-built_in">require</span>(<span class="hljs-string">'os'</span>).EOL,
   state = {
     error: chalk.red,
     warning: chalk.cyan
@@ -18,7 +19,7 @@
     _.forEach(messages, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">message</span>) </span>{
         <span class="hljs-keyword">var</span> text = <span class="hljs-string">'ESLint - '</span> + name + <span class="hljs-string">' : (line: %d, column: %d) rule: %s - %s'</span>,
           type = message.fatal? <span class="hljs-string">'error'</span> : <span class="hljs-string">'warning'</span>;
-        logger.error(state[type](text), message.line, message.column, message.message, message.ruleId);
+        logger.error(state[type](text) + EOL + chalk.magenta(<span class="hljs-string">'source: %s'</span>), message.line, message.column, message.message, message.ruleId, message.source);
     });
   }
 };
