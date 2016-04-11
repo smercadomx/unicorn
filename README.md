@@ -31,6 +31,7 @@ Simple build platform for wria2 and sheath projects.
       --jumpcss, --no-csslint  Disable csslint
       -d, --dry                Dry run
       --cwd <path>             Sets the base path for the build
+      -u, --unique             Builds the rollup at the end
 
 ###### Examples
 
