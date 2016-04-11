@@ -290,9 +290,15 @@
 <li>Apply the <code>YUI</code> template for css.</li>
 <li>Uglify and minify</li>
 </ul></div></div><div class="code"><div class="wrapper">      _.forEach(skins, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">skin</span>) </span>{
-        <span class="hljs-keyword">var</span> skinContent = fs.readFileSync(path.join(skinPath, skin, name + <span class="hljs-string">'-skin.css'</span>)),
-          content = core + EOL + skinContent,
-          targetPath = path.join(config.target, filename, <span class="hljs-string">'assets'</span>, <span class="hljs-string">'skins'</span>, skin);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Build the css files.</p></div></div><div class="code"><div class="wrapper">        builder.buildCss(content, targetPath, filename, name, properties);
+        <span class="hljs-keyword">var</span> currentSkin = path.join(skinPath, skin, name + <span class="hljs-string">'-skin.css'</span>),
+          targetPath = path.join(config.target, filename, <span class="hljs-string">'assets'</span>, <span class="hljs-string">'skins'</span>, skin),
+          skinContent,
+          content;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the skin exists, build it.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">if</span> (fs.existsSync(currentSkin)) {
+          skinContent = fs.readFileSync(currentSkin);
+          content = core + EOL + skinContent;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Build the css files.</p></div></div><div class="code"><div class="wrapper">          builder.buildCss(content, targetPath, filename, name, properties);
+        } <span class="hljs-keyword">else</span> {
+          LOG.debug(<span class="hljs-string">'%s does not exist'</span>, currentSkin)
+        }
       });
   },
 
