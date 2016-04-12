@@ -52,7 +52,7 @@ describe('Builder', function() {
 
   describe('build-js', function () {
     it('build', function () {
-      var output = 'YUI.add(\'test\',function(Y/**,NAME*/){vara=1;console.log(a);},\'1.0.0\',{\'requires\':{}});',
+      var output = 'YUI.add(\'test\',function(Y,NAME){vara=1;console.log(a);},\'1.0.0\',{\'requires\':{}});',
         result;
       result = builder.js('test', [path.join('js', 'js.js')], {
         parent: {}
@@ -61,7 +61,7 @@ describe('Builder', function() {
     });
 
     it('build-lang', function () {
-      var output = 'YUI.add(\'test\',function(Y/**,NAME*/){vara=1;console.log(a);},\'1.0.0\',{\'requires\':{},\'lang\':[\'es\',\'en\']});',
+      var output = 'YUI.add(\'test\',function(Y,NAME){vara=1;console.log(a);},\'1.0.0\',{\'requires\':{},\'lang\':[\'es\',\'en\']});',
         result;
       result = builder.js('test', [path.join('js', 'js.js')], {
         lang: ['es', 'en'],
@@ -71,7 +71,7 @@ describe('Builder', function() {
     });
 
     it('build-skinnable', function () {
-      var output = 'YUI.add(\'test\',function(Y/**,NAME*/){vara=1;console.log(a);},\'1.0.0\',{\'skinnable\':true,\'requires\':{}});',
+      var output = 'YUI.add(\'test\',function(Y,NAME){vara=1;console.log(a);},\'1.0.0\',{\'skinnable\':true,\'requires\':{}});',
         result;
       result = builder.js('test', [path.join('js', 'js.js')], {
         skinnable: true,
@@ -81,7 +81,7 @@ describe('Builder', function() {
     });
 
     it('build-optional', function () {
-      var output = 'YUI.add(\'test\',function(Y/**,NAME*/){vara=1;console.log(a);},\'1.0.0\',{\'optional\':{\'key\':\'value\'},\'requires\':{}});',
+      var output = 'YUI.add(\'test\',function(Y,NAME){vara=1;console.log(a);},\'1.0.0\',{\'optional\':{\'key\':\'value\'},\'requires\':{}});',
         result;
       result = builder.js('test', [path.join('js', 'js.js')], {
         optional: {
@@ -93,7 +93,7 @@ describe('Builder', function() {
     });
 
     it('build-config', function () {
-      var output = 'YUI.add(\'test\',function(Y/**,NAME*/){vara=1;console.log(a);},\'1.0.0\',{\'key\':\'value\',\'key2\':\'value2\',\'requires\':{}});',
+      var output = 'YUI.add(\'test\',function(Y,NAME){vara=1;console.log(a);},\'1.0.0\',{\'key\':\'value\',\'key2\':\'value2\',\'requires\':{}});',
         result;
       result = builder.js('test', [path.join('js', 'js.js')], {
         config: {
@@ -118,7 +118,7 @@ describe('Builder', function() {
     });
 
     it('build-preappend-append', function () {
-      var output = 'vara=1;console.log(a);YUI.add(\'test\',function(Y/**,NAME*/){vara=1;console.log(a);},\'1.0.0\',{\'requires\':{}});vara=1;console.log(a);',
+      var output = 'vara=1;console.log(a);YUI.add(\'test\',function(Y,NAME){vara=1;console.log(a);},\'1.0.0\',{\'requires\':{}});vara=1;console.log(a);',
         result;
       result = builder.js('test', [path.join('js', 'js.js')], {
         prependfiles: [path.join('js', 'js.js')],
@@ -142,7 +142,7 @@ describe('Builder', function() {
     });
 
     it('build-full', function () {
-      var output = 'YUI.add(\'test\',function(Y/**,NAME*/){},\'1.0.0\',{\'skinnable\':true,\'requires\':{},\'lang\':[\'es\',\'en\']});',
+      var output = 'YUI.add(\'test\',function(Y,NAME){},\'1.0.0\',{\'skinnable\':true,\'requires\':{},\'lang\':[\'es\',\'en\']});',
         result,
         outputPath = path.join(target, 'test');
       builder.load({
