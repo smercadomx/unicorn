@@ -20,7 +20,7 @@
     config = {},
     lintConfig = {},
     defaultConfig = {
-      regex: <span class="hljs-regexp">/^.*?(?:Y.log).*?(?:;|).*;|(\/\*\@DBG\*\/)/mg</span>,
+      regex: <span class="hljs-string">'^(?!\\s*?\\*).*(?:Y.log)(.*\n*)*?.*\\);.*|^.*?(?:/\\*@DBG\\*/).*\\r?\\n|^.*?(?:/\\*@DBG@\\*/).*\\r?\\n'</span>,
       target: path.join(process.cwd(), <span class="hljs-string">'target'</span>)
     };
 
@@ -31,7 +31,7 @@
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replace</span>(<span class="hljs-params">content, keys</span>) </span>{
   _.forEach(_.merge(config, keys || {}), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, key</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the key does not have <code>@key@</code>, it will be added.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">if</span> (key.indexOf(<span class="hljs-string">'\@'</span>) != <span class="hljs-number">0</span>) {
       key = <span class="hljs-string">'\@'</span> + key + <span class="hljs-string">'\@'</span>;
-    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Replace the given key in the entire content.</p></div></div><div class="code"><div class="wrapper">    content = content.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(key, <span class="hljs-string">'gi'</span>), value);
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Replace the given key in the entire content.</p></div></div><div class="code"><div class="wrapper">    content = content.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(key, <span class="hljs-string">'mgi'</span>), value);
   });
   <span class="hljs-keyword">return</span> content;
 };
@@ -50,7 +50,7 @@
  * @param content {string} The content to append the file.
  * @param file {string} The file to append.
  */</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">append</span>(<span class="hljs-params">content, file</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Check that the file exists.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">if</span> (fs.existsSync(file)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Append the file to the given content</p></div></div><div class="code"><div class="wrapper">    content = content + fs.readFileSync(file) + EOL;
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">append</span>(<span class="hljs-params">content, file</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Check that the file exists.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">if</span> (fs.existsSync(file)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Append the file to the given content</p></div></div><div class="code"><div class="wrapper">    content = content + fs.readFileSync(file, <span class="hljs-string">'utf8'</span>) + EOL;
   } <span class="hljs-keyword">else</span> {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the file doesnt exist just notify the user.</p></div></div><div class="code"><div class="wrapper">    LOG.debug(file + <span class="hljs-string">' Does not exist.'</span>);
   }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Return the content.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">return</span> content;
 }
