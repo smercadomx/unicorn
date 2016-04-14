@@ -33,7 +33,7 @@ describe('Writer', function() {
         debug = content + '\nY.log(\'log\');',
         result;
 
-      writer.js(debug, target, /^.*?(?:Y.log).*?(?:;|).*;|(\/\*\@DBG\*\/)/mg);
+      writer.js(debug, target, '^(?!\\s*?\\*).*(?:Y.log)(.*\n*)*?.*\\);.*|^.*?(?:/\\*@DBG\\*/).*\\r?\\n|^.*?(?:/\\*@DBG@\\*/).*\\r?\\n');
       result = fs.readFileSync(target + '.js', 'utf-8');
       assert.equal(result.replace(/(\r\n|\n|\r)/gm, ''), content);
       result = fs.readFileSync(target + '-min.js', 'utf-8');
