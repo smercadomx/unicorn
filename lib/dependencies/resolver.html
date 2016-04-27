@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/dependencies/resolver</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="lib/dependencies/resolver"><meta name="groc-project-path" content="lib/dependencies/resolver.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">lib/dependencies/resolver.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<span class="hljs-keyword">var</span> Node = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./node'</span>);
+
+<span class="hljs-keyword">var</span> nodes = {};
+
+<span class="hljs-built_in">module</span>.exports = {
+  hasNode: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node</span>) </span>{
+    <span class="hljs-keyword">return</span> !!nodes[node];
+  },
+
+  add: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name, dependencies</span>) </span>{
+    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.hasNode(name)) {
+      nodes[name] = <span class="hljs-keyword">new</span> Node(name, dependencies);
+    } <span class="hljs-keyword">else</span> {
+      nodes[name].update(dependencies);
+    }
+  },
+
+  resolve: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name</span>) </span>{
+
+  },
+
+  get: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> nodes;
+  }
+};</div></div></div></div></body></html>

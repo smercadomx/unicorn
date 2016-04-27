@@ -4,8 +4,14 @@
   logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">'winston'</span>),
   EOL = <span class="hljs-built_in">require</span>(<span class="hljs-string">'os'</span>).EOL,
   state = {
-    error: chalk.red,
-    warning: chalk.cyan
+    error: {
+      color: chalk.red,
+      logType: <span class="hljs-string">'error'</span>
+    },
+    warning: {
+      color: chalk.yellow,
+      logType: <span class="hljs-string">'warn'</span>
+    }
   };
 
 <span class="hljs-keyword">var</span> reporter = {
@@ -15,12 +21,25 @@
    * @param message {object} the eslint results.
    * @param name {string} The name of the module.
    */</span>
-  report: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">messages, name</span>) </span>{
-    _.forEach(messages, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">message</span>) </span>{
-        <span class="hljs-keyword">var</span> text = <span class="hljs-string">'ESLint - '</span> + name + <span class="hljs-string">' : (line: %d, column: %d) rule: %s - %s'</span>,
-          type = message.fatal? <span class="hljs-string">'error'</span> : <span class="hljs-string">'warning'</span>;
-        logger.error(state[type](text) + EOL + chalk.magenta(<span class="hljs-string">'source: %s'</span>), message.line, message.column, message.message, message.ruleId, message.source);
-    });
+  report: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">messages, name</span>) </span>{
+    <span class="hljs-keyword">if</span> (!_.isEmpty(messages)) {
+      <span class="hljs-built_in">console</span>.log();
+      logger.info(chalk.cyan(<span class="hljs-string">'ESLint: '</span> + name));
+      _.forEach(messages, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">message</span>) </span>{
+        <span class="hljs-keyword">var</span> rule, type = message.severity &gt; <span class="hljs-number">1</span> ? <span class="hljs-string">'error'</span> : <span class="hljs-string">'warning'</span>;
+
+        <span class="hljs-keyword">if</span> (message.message &amp;&amp; message.message.trim().length) {
+          rule = message.message;
+        }
+        <span class="hljs-keyword">if</span> (message.ruleId &amp;&amp; message.ruleId.trim().length) {
+          rule += <span class="hljs-string">' ('</span> + message.ruleId + <span class="hljs-string">')'</span>;
+        }
+
+        logger.log(state[type].logType, <span class="hljs-string">'%d:%d\t'</span> +
+          state[type].color(type) + <span class="hljs-string">'\t %s'</span>,
+          message.line, message.column, rule);
+      });
+    }
   }
 };
 
