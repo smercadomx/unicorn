@@ -27,6 +27,9 @@
       expandVars: <span class="hljs-literal">false</span>
     };
 
+<span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^win/</span>.test(process.platform)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This is done only on windows. Adding graceful-fs makes everything slower.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-built_in">require</span>(<span class="hljs-string">'graceful-fs'</span>).gracefulify(fs);
+}
+
 <span class="hljs-comment">/**! Run uglifyjs.
  * @param content {string} The content to compress.
  */</span>
@@ -40,7 +43,7 @@
   * @param regex {string} The regex to be applied to the raw and min version.
   */</span>
  js: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">content, target, regex</span>) </span>{
-   mkdirp.sync(path.dirname(target));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>debug</code> version.</p></div></div><div class="code"><div class="wrapper">   fs.writeFileSync(target+ <span class="hljs-string">'-debug.js'</span>, content, <span class="hljs-string">'utf8'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Apply the <code>regex</code> to remove logging and debug lines.</p></div></div><div class="code"><div class="wrapper">   <span class="hljs-keyword">if</span> (regex) {
+   mkdirp.sync(path.dirname(target));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>debug</code> version.</p></div></div><div class="code"><div class="wrapper">   fs.writeFileSync(target+ <span class="hljs-string">'-debug.js'</span>, content, <span class="hljs-string">'utf8'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Apply the <code>regex</code> to remove logging and debug lines.</p></div></div><div class="code"><div class="wrapper">   <span class="hljs-keyword">if</span> (regex &amp;&amp; !<span class="hljs-regexp">/^win/</span>.test(process.platform)) {
      content = content.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(regex, <span class="hljs-string">'gm'</span>), <span class="hljs-string">''</span>);
    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>raw</code> version.</p></div></div><div class="code"><div class="wrapper">   fs.writeFileSync(target + <span class="hljs-string">'.js'</span>, content, <span class="hljs-string">'utf8'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write the <code>min</code> version.</p></div></div><div class="code"><div class="wrapper">   fs.writeFileSync(target + <span class="hljs-string">'-min.js'</span>, compress(content), <span class="hljs-string">'utf8'</span>);
  },

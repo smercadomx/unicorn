@@ -375,26 +375,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/u280285/work/src/unicorn/lib/builder_old.js",
-            "projectPath": "lib/builder_old.js",
-            "targetPath": "lib/builder_old",
-            "pageTitle": "lib/builder_old",
-            "title": "builder_old"
-          },
-          "depth": 2,
-          "outline": []
-        }, {
-          "type": "file",
-          "data": {
-            "language": {
-              "nameMatchers": [".js"],
-              "pygmentsLexer": "javascript",
-              "multiLineComment": ["/*", "*", "*/"],
-              "singleLineComment": ["//"],
-              "ignorePrefix": "}",
-              "foldPrefix": "^",
-              "name": "JavaScript"
-            },
             "sourcePath": "/Users/u280285/work/src/unicorn/lib/cli.js",
             "projectPath": "lib/cli.js",
             "targetPath": "lib/cli",
@@ -403,56 +383,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           },
           "depth": 2,
           "outline": []
-        }, {
-          "type": "folder",
-          "data": {
-            "path": "lib/dependencies",
-            "title": "dependencies"
-          },
-          "depth": 2,
-          "children": [
-            {
-              "type": "file",
-              "data": {
-                "language": {
-                  "nameMatchers": [".js"],
-                  "pygmentsLexer": "javascript",
-                  "multiLineComment": ["/*", "*", "*/"],
-                  "singleLineComment": ["//"],
-                  "ignorePrefix": "}",
-                  "foldPrefix": "^",
-                  "name": "JavaScript"
-                },
-                "sourcePath": "/Users/u280285/work/src/unicorn/lib/dependencies/node.js",
-                "projectPath": "lib/dependencies/node.js",
-                "targetPath": "lib/dependencies/node",
-                "pageTitle": "lib/dependencies/node",
-                "title": "node"
-              },
-              "depth": 3,
-              "outline": []
-            }, {
-              "type": "file",
-              "data": {
-                "language": {
-                  "nameMatchers": [".js"],
-                  "pygmentsLexer": "javascript",
-                  "multiLineComment": ["/*", "*", "*/"],
-                  "singleLineComment": ["//"],
-                  "ignorePrefix": "}",
-                  "foldPrefix": "^",
-                  "name": "JavaScript"
-                },
-                "sourcePath": "/Users/u280285/work/src/unicorn/lib/dependencies/resolver.js",
-                "projectPath": "lib/dependencies/resolver.js",
-                "targetPath": "lib/dependencies/resolver",
-                "pageTitle": "lib/dependencies/resolver",
-                "title": "resolver"
-              },
-              "depth": 3,
-              "outline": []
-            }
-          ]
         }, {
           "type": "folder",
           "data": {

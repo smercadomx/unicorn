@@ -29,6 +29,10 @@
  * @param keys {array} The keys to be replaced.
  */</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replace</span>(<span class="hljs-params">content, keys</span>) </span>{
+  <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^win/</span>.test(process.platform)) {
+    <span class="hljs-keyword">return</span> replaceWindows(content, keys);
+  }
+
   _.forEach(_.merge(config, keys || {}), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, key</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the key does not have <code>@key@</code>, it will be added.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">if</span> (key.indexOf(<span class="hljs-string">'\@'</span>) != <span class="hljs-number">0</span>) {
       key = <span class="hljs-string">'\@'</span> + key + <span class="hljs-string">'\@'</span>;
     }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Replace the given key in the entire content.</p></div></div><div class="code"><div class="wrapper">    content = content.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(key, <span class="hljs-string">'mgi'</span>), value);
@@ -36,15 +40,34 @@
   <span class="hljs-keyword">return</span> content;
 };
 
+<span class="hljs-comment">/**! Replace the content with the given keys.
+ * @param content {string} The current content.
+ * @param keys {array} The keys to be replaced.
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replaceWindows</span>(<span class="hljs-params">content, keys</span>) </span>{
+  <span class="hljs-keyword">var</span> result = <span class="hljs-string">''</span>;
+
+  _.forEach(content.split(EOL), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">line</span>) </span>{
+    <span class="hljs-keyword">var</span> aux = line;
+    _.forEach(_.merge(config, keys || {}), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, key</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the key does not have <code>@key@</code>, it will be added.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">if</span> (key.indexOf(<span class="hljs-string">'\@'</span>) != <span class="hljs-number">0</span>) {
+        key = <span class="hljs-string">'\@'</span> + key + <span class="hljs-string">'\@'</span>;
+      }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Replace the given key in the entire content.</p></div></div><div class="code"><div class="wrapper">      aux = aux.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(key, <span class="hljs-string">'mgi'</span>), value);
+    });
+    result += aux + EOL;
+  });
+
+  <span class="hljs-keyword">return</span> result;
+};
+
 <span class="hljs-comment">/**! Check that the path is valid.
  * @param base {string} The base path.
  * @param file {string} The current file.
  * @param type {string} The file type (js or css).
  */</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkPath</span>(<span class="hljs-params">base, file, type</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Checks if the path starts with the type (<code>js or css</code>).</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">if</span> (path.normalize(file).indexOf(type + path.sep) != <span class="hljs-number">0</span>) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If not add the type.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">return</span> path.join(base, type, file);
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkPath</span>(<span class="hljs-params">base, file, type</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Checks if the path starts with the type (<code>js or css</code>).</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">if</span> (path.normalize(file).indexOf(type + path.sep) !== <span class="hljs-number">0</span>) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If not add the type.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">return</span> path.join(base, type, file);
   }
   <span class="hljs-keyword">return</span> path.join(base, file);
-};
+}
 
 <span class="hljs-comment">/**! Append the given file to the given content.
  * @param content {string} The content to append the file.
