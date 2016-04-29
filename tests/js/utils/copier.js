@@ -39,7 +39,7 @@ describe('Copier', function() {
 
   describe('copy', function () {
     it('copy-assets', function () {
-      copier.copy([['./bin', './copy']], process.cwd(), target);
+      copier.copy([['./bin', './copy/bin']], process.cwd(), target);
       try {
         fs.statSync(path.join(target, 'copy', 'bin', 'unicorn'));
         assert.ok('CSS not copied', 'Everything is ok');

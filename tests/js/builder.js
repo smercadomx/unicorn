@@ -155,7 +155,7 @@ describe('Builder', function() {
         lang: ['es', 'en'],
         skinnable: true,
         copy: [
-          ['assets/skinless', 'copy/']
+          ['assets/skinless', 'copy/assets/skinless']
         ],
         parent: {}
       }, source);
