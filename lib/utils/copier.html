@@ -17,10 +17,11 @@
    */</span>
   copy: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">copies, base, target</span>) </span>{
     _.forEach(copies, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">copy</span>) </span>{
-        <span class="hljs-keyword">var</span> sources = glob.sync(path.join(base, copy[<span class="hljs-number">0</span>],  <span class="hljs-string">'*'</span>)),
+        <span class="hljs-keyword">var</span> bastCopy = path.join(base, copy[<span class="hljs-number">0</span>]),
+          sources = glob.sync(path.join(bastCopy,  <span class="hljs-string">'*'</span>)),
           destination = path.join(target, copy[<span class="hljs-number">1</span>]);
         _.forEach(sources, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">source</span>) </span>{
-          <span class="hljs-keyword">var</span> relativePath = path.relative(base, source),
+          <span class="hljs-keyword">var</span> relativePath = path.relative(bastCopy, source),
             outputPath = path.join(destination, relativePath);
           mkdirp.sync(path.dirname(outputPath));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Copy the file.</p></div></div><div class="code"><div class="wrapper">          fs.writeFileSync(outputPath, fs.readFileSync(source, <span class="hljs-string">'utf8'</span>));
         });
@@ -32,7 +33,9 @@
    * @param target {string} The output path.
    * @param moduleName {string} The name of the module being built.
    */</span>
-  assets: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">base, target, moduleName</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Search for all the files that are not css.</p></div></div><div class="code"><div class="wrapper">    _.forEach(glob.sync(<span class="hljs-string">'**/!(*.css)'</span>, {
+  assets: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">base, target, moduleName</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^win/</span>.test(process.platform)) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This is done only on windows. Adding graceful-fs makes everything slower.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">return</span>;
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Search for all the files that are not css.</p></div></div><div class="code"><div class="wrapper">    _.forEach(glob.sync(<span class="hljs-string">'**/!(*.css)'</span>, {
       cwd: base
     }), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">file</span>) </span>{
       <span class="hljs-keyword">var</span> filePath = path.join(base, file),
